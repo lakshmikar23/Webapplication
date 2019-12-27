@@ -1,21 +1,38 @@
 pipeline{
          agent any
           {
-          }
+               environment{
+                            PATH = "/usr/bin/mvn:$PATH"
+                         }
+
           stages{
                 stage("git checkout")
                  {
                    steps{
+                         git credentialsId: 'github', url: 'https://github.com/lakshmikar23/Webapplication.git'
                        }
                   }
                  stage("maven build")
                    {
                     steps{
+                          sh "mvn clean package"
                          }
                     }
                   stage("deploy")
                    {
                      steps{
-                          }
-                    }
+                            sshagent(['web-server']) {
+                       sh """
+                               scp -o StrictHostKeyChecking=no target/myweb.war  ubuntu@h35.180.55.122:/tomcat/webapps/
+                    
+                               ssh ubuntu@h35.180.55.122 /tomcat/bin/shutdown.sh
+                    
+                                ssh ubuntu@h35.180.55.122 /tomcat/bin/startup.sh
+                
+                         """       
+                                   }
+                            }
+                         }
+                     }
+                   }  
                     

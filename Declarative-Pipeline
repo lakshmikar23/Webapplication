@@ -1,5 +1,10 @@
 pipeline{
          agent any
+            environment{
+                         
+                         def mvnHOME = tool name: 'maven 3.6.0', type: 'maven'
+                         def mvnCMD = "${mvnHOME}/bin/mvn"
+                       }
                 
           stages{
                 stage("git checkout")
@@ -12,8 +17,7 @@ pipeline{
            stage("maven build")
                    {
                     steps{
-                         def mvnHOME = tool name: 'maven 3.6.0', type: 'maven'
-                         def mvnCMD = "${mvnHOME}/bin/mvn"
+                         
                          sh "${mvnCMD} clean package"
                          
                          }

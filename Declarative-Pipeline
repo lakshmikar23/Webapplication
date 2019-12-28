@@ -8,6 +8,17 @@ pipeline{
                          git credentialsId: 'github', url: 'https://github.com/lakshmikar23/Webapplication.git'
                        }
                   }
-               } 
-            }   
+ 
+           stage("maven build")
+                   {
+                    steps{
+                            tool name: 'maven-3.6.0', type: 'maven'
+
+                               sh 'mvn clean package'
+                         
+                         }
+                    }
+               }
+           }    
+   
                     
